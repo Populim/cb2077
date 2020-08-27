@@ -6,21 +6,23 @@ import math
 #the traditional base64 is defined by:
 #ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/
 #however, due to url encoding, we shall change '+','/' to '-','_'
-#geting our base 64 as:
+#letting us with our base 64 as:
 #ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_
 
 
 #convert a number to base64
 #base 64 ocupies 55.36% of the space of a number represented in base 10
+#as log_{64} 10 = 0.5536
 #e.g.: 
 #a 10 digit number in base 10 is a 6(5.536 rounded up) digit number in base64
+#and 1 character in base64 equals 6 characters in base 2, as 2^6=64.
 def tobase64(number):
 	base64 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_'
-	n = math.ceil(highestbit(number)/6.0)
+	n = math.ceil(highestbit(number)/6.0)#get the number of characters needed
 	b64 = ""
 	for i in range(n):
-		b64 += base64[(number&63)] 
-		number = number >> 6
+		b64 += base64[(number&63)]#get the least 6 significant bits
+		number = number >> 6 #shifts the number right in 6 bits
 	return b64
 
 #convert a string in this base 64 to number 
@@ -90,7 +92,7 @@ sk_tree[:,2] = np.array([0,0,0,1,0,0,0,0,1,1,1,0,0,0,0,0,1,1,1,0,0])
 # bit offset:	... 13	12	11	10	9	8	7	6	5	4	3	2	1	0
 #					 \ /	 \	/	|	 \ /	|	 \ /	|	|	 \ /
 # skill:			  8		  7		6	  5		4	  3		2	1	  0
-# max of skill:
+# max of skill:		  3		  3		1	  3		1	  2		1	1	  3	
 
 #hashing:
 hsh = 0
@@ -106,9 +108,9 @@ for i in range(N):
 
 print("Hash:", hsh)
 
-print("Hash convertido em alfanumerico: ",tobase64(hsh))
+print("Hash converted to alfanumerico: ",tobase64(hsh))
 
-print("Hash obtido do alfanumerico: " ,frombase64(tobase64(hsh)))
+print("Hash gotten from alfanumerico: " ,frombase64(tobase64(hsh)))
 
 hash_novo = frombase64(tobase64(hsh))
 vetor = np.zeros((N))
@@ -127,5 +129,5 @@ print(vetor)
 #print(vetor-sk_tree[:,2])
 
 #measuring the time spent on the code
-print("Tempo passado:",-start + time.time())
+print("Time elapsed:",-start + time.time())
 
