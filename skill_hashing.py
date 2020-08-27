@@ -1,7 +1,11 @@
-# 8*6
 import numpy as np
 import time
 import math
+# Isso aqui gera o hashing relacionado a apenas uma árvore de talentos
+# vão ter 12 arvores, mas tudo segue a mesma lógica
+#depois é só concatenar a string gerada por cada um, separando
+#com vírgulas
+
 
 #the traditional base64 is defined by:
 #ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/
@@ -86,7 +90,11 @@ sk_tree[:,2] = np.array([0,0,0,1,0,0,0,0,1,1,1,0,0,0,0,0,1,1,1,0,0])
 #sk_tree[:,2] = sk_tree[:,1]
 #print(sk_tree)
 
+#se você não consegue visualizar essa ascii art, abre em um editor de texto
+#com tabs equivalentes a 4 espaços, ou me pede o print, ou pede pra eu
+#explicar
 
+#vector of skills to bitmap:
 #max 1 is represented in 1 bit, max 2 or 3 are represented by 2 bits
 # bits:  		... 0	0	0	0	0	0	0	0	0	0	0	0	0	0
 # bit offset:	... 13	12	11	10	9	8	7	6	5	4	3	2	1	0
