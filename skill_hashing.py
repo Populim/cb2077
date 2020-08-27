@@ -3,6 +3,17 @@ import numpy as np
 import time
 import math
 
+#the traditional base64 is defined by:
+#ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/
+#however, due to url encoding, we shall change '+','/' to '-','_'
+#geting our base 64 as:
+#ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_
+
+
+#convert a number to base64
+#base 64 ocupies 55.36% of the space of a number represented in base 10
+#e.g.: 
+#a 10 digit number in base 10 is a 6(5.536 rounded up) digit number in base64
 def tobase64(number):
 	base64 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_'
 	n = math.ceil(highestbit(number)/6.0)
@@ -12,6 +23,7 @@ def tobase64(number):
 		number = number >> 6
 	return b64
 
+#convert a string in this base 64 to number 
 def frombase64(string):
 	valor = 0
 	for ind,caracter in enumerate(string):
@@ -31,6 +43,11 @@ def frombase64(string):
 		valor = valor | aux
 	return valor
 
+#get the position(first) of the highest value bit in a number
+#eg: 5 -> 1 0 1   #eg: 23 -> 1 0 1 1 1    #eg: 1 -> 0 1   #eg: 0 -> 0 0 
+#         3 2 1   #          5 4 3 2 1    #         2 1   #         2 1    
+# returns 3       #  returns 5            # returns 1     # returns 0
+#		  	
 def highestbit(number):
 	number = int(number)
 	n = 0
@@ -39,38 +56,44 @@ def highestbit(number):
 		n = n + 1
 	return n
 
+
+#measuring the time spent on the code
 start = time.time()
 
 
-
 # data structure of each skill tree:
-# id: 			0 1 2 3 4 5 6 7 8 9
-# max points:	4 2 2 3 2 4 2 4 4 3
-# current pts:  0 0 0 1 0 0 0 0 1 1
-
+# id: 			sk_tree[:,0]
+# max points:	sk_tree[:,1]
+# current pts:  sk_tree[:,2]
 N = 21
-
 sk_tree = np.zeros((N,3))
 
-#id de cada skill
+#id of each skill
 for i in range(N):
 	sk_tree[i,0] = i
-#maximo de skills
+
+#maximum of skill point in each node of the skill tree
 sk_tree[:,1] = np.array([3,1,1,2,1,3,1,3,3,2,3,1,1,3,1,1,3,2,2,1,1])
-#10*1 +11*2
-#skill atuais
-#sk_tree[:,2] = np.array([0,0,0,1,0,0,0,0,1,1,1,0,0,0,0,0,1,1,1,0,0])
-sk_tree[:,2] = np.array([3,1,1,2,1,3,1,3,1,2,3,0,1,2,0,0,2,1,2,1,0])
+#max 1 is represented in 1 bit, max 2 or 3 are represented by 2 bits
+#max 4,5,6,7 are represented by 3 bits...
+#therefore, this skill tree ocuppies 10*1 + 11*2 = 32 bits at max
+
+#actual count of skill points in each node
+sk_tree[:,2] = np.array([0,0,0,1,0,0,0,0,1,1,1,0,0,0,0,0,1,1,1,0,0])
+#sk_tree[:,2] = np.array([0,1,1,2,1,3,1,3,1,2,3,0,1,1,0,0,2,1,2,1,1])
 #sk_tree[:,2] = sk_tree[:,1]
 #print(sk_tree)
 
-#se   0<= max < 2, só preciso de um bit
-#se   1 < max < 4, preciso de 2 bits
-#se max >= 4, preciso de 3 bits
 
-#hash
+#max 1 is represented in 1 bit, max 2 or 3 are represented by 2 bits
+# bits:  		... 0	0	0	0	0	0	0	0	0	0	0	0	0	0
+# bit offset:	... 13	12	11	10	9	8	7	6	5	4	3	2	1	0
+#					 \ /	 \	/	|	 \ /	|	 \ /	|	|	 \ /
+# skill:			  8		  7		6	  5		4	  3		2	1	  0
+# max of skill:
+
+#hashing:
 hsh = 0
-
 tam = 0
 place = 0
 for i in range(N):
@@ -103,23 +126,6 @@ print(vetor)
 
 #print(vetor-sk_tree[:,2])
 
+#measuring the time spent on the code
 print("Tempo passado:",-start + time.time())
 
-#print(highestbit(2))
-
-#tobase64()
-
-
-"""
-print(len(teste))
-tm = teste.upper()
-tm = '0123456789'+tm+teste
-print(len(tm))
-print(tm)
-
-print(ord('z'))
-print(chr(60))
-"""
-
-
-#3453q94tmhov3w94ty34txe5v84ybn93w8
