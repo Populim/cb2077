@@ -7,6 +7,20 @@ import math
 #com vírgulas
 
 
+#get the position(first) of the highest value bit in a number
+#eg: 5 -> 1 0 1   #eg: 23 -> 1 0 1 1 1    #eg: 1 -> 0 1   #eg: 0 -> 0 0 
+#         3 2 1   #          5 4 3 2 1    #         2 1   #         2 1    
+# returns 3       #  returns 5            # returns 1     # returns 0
+#		  	
+def highestbit(number):
+	number = int(number)
+	n = 0
+	while(number!=0):
+		number = number >> 1
+		n = n + 1
+	return n
+
+
 #the traditional base64 is defined by:
 #ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/
 #however, due to url encoding, we shall change '+','/' to '-','_'
@@ -20,13 +34,28 @@ import math
 #e.g.: 
 #a 10 digit number in base 10 is a 6(5.536 rounded up) digit number in base64
 #and 1 character in base64 equals 6 characters in base 2, as 2^6=64.
-def tobase64(number):
+def hashing(sk_tree):
+	#hashing:
+	hsh = 0
+	tam = 0
+	place = 0
+	for i in range(N):
+		a = int(sk_tree[i,1])#valor max
+		b = int(sk_tree[i,2])#valor atual
+		b = min(a,b)#checa se o valor atual é menor que o máximo
+		b = b << tam
+		hsh = hsh | b
+		tam += highestbit(a)
+	return hsh
+
+def tobase64(hsh):
+
 	base64 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_'
-	n = math.ceil(highestbit(number)/6.0)#get the number of characters needed
+	n = math.ceil(highestbit(hsh)/6.0)#get the number of characters needed
 	b64 = ""
 	for i in range(n):
-		b64 += base64[(number&63)]#get the least 6 significant bits
-		number = number >> 6 #shifts the number right in 6 bits
+		b64 += base64[(hsh&63)]#get the least 6 significant bits
+		hsh = hsh >> 6 #shifts the number right in 6 bits
 	return b64
 
 #convert a string in this base 64 to number 
@@ -49,18 +78,7 @@ def frombase64(string):
 		valor = valor | aux
 	return valor
 
-#get the position(first) of the highest value bit in a number
-#eg: 5 -> 1 0 1   #eg: 23 -> 1 0 1 1 1    #eg: 1 -> 0 1   #eg: 0 -> 0 0 
-#         3 2 1   #          5 4 3 2 1    #         2 1   #         2 1    
-# returns 3       #  returns 5            # returns 1     # returns 0
-#		  	
-def highestbit(number):
-	number = int(number)
-	n = 0
-	while(number!=0):
-		number = number >> 1
-		n = n + 1
-	return n
+
 
 
 #measuring the time spent on the code
@@ -102,23 +120,8 @@ sk_tree[:,2] = np.array([0,0,0,1,0,0,0,0,1,1,1,0,0,0,0,0,1,1,1,0,0])
 # skill:			  8		  7		6	  5		4	  3		2	1	  0
 # max of skill:		  3		  3		1	  3		1	  2		1	1	  3	
 
-#hashing:
-hsh = 0
-tam = 0
-place = 0
-for i in range(N):
-	a = int(sk_tree[i,1])#valor max
-	b = int(sk_tree[i,2])#valor atual
-	b = min(a,b)#checa se o valor atual é menor que o máximo
-	b = b << tam
-	hsh = hsh | b
-	tam += highestbit(a)
 
-print("Hash:", hsh)
-
-print("Hash converted to alfanumerico: ",tobase64(hsh))
-
-print("Hash gotten from alfanumerico: " ,frombase64(tobase64(hsh)))
+hsh = hashing(sk_tree)
 
 hash_novo = frombase64(tobase64(hsh))
 vetor = np.zeros((N))
