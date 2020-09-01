@@ -1,10 +1,7 @@
+  var hexes = []
+
 function setup() {
   createCanvas(900, 500);
-};
-
-function draw() {
-  background(100);
-  stroke(10);
   
    var dict = {0:[0.2,0.25],
   1:[0.3,0.25],2:[0.4,0.25],
@@ -18,6 +15,38 @@ function draw() {
   19:[0.8,0.55],20:[0.5,0.7]
   };
 
+  for(key in dict){
+    let h = new Hex(width*dict[key][0], height*dict[key][1], 0.053*height, 6);
+    hexes.push(h);
+  }
+  console.log(hexes.length);
+  
+};
+
+function mousePressed(){
+  for (i in hexes){
+    if (hexes[i].contains(mouseX, mouseY)){
+      hexes[i].changeColor();
+    }
+  }
+}
+
+function draw() {
+  background(100);
+  stroke(10);
+  
+  var dict = {0:[0.2,0.25],
+  1:[0.3,0.25],2:[0.4,0.25],
+  3:[0.5,0.25],4:[0.6,0.25],5:[0.7,0.25],
+  6:[0.15,0.4],
+  7:[0.25,0.4],8:[0.35,0.4],9:[0.45,0.4],10:[0.55,0.4],
+  11:[0.65,0.4],12:[0.75,0.4],
+  13:[0.2,0.55],14:[0.3,0.55],
+  15:[0.4,0.55],16:[0.5,0.55],
+  17:[0.6,0.55],18:[0.7,0.55],
+  19:[0.8,0.55],20:[0.5,0.7]
+  }; 
+  
   var arestas = {0:[0,1],1:[1,2],2:[2,3],3:[3,4],4:[4,5],
   5:[1,7],6:[2,9],7:[3,9],8:[3,10],9:[5,11],10:[6,7],
   11:[7,8],12:[8,9],13:[9,10],14:[10,11],15:[11,18],16:[12,18],
@@ -36,23 +65,44 @@ function draw() {
     
     line(width*x1, height*y1, width*x2, height*y2);
   }
-
-  //line(width0.2, height0.1, width0.3, height0.1);
-  for(var key in dict){
-    polygon(width*dict[key][0], height*dict[key][1], 0.053*height, 6);
+  
+  for(i in hexes){
+    hexes[i].show();
   }
 }
 
-function polygon(x, y, radius, npoints) {
-  this.clicked = function(){
-    this.col = color(255,0,200);
+class Hex{
+  constructor(x, y, r, n) {
+    this.angle = TWO_PI / n;
+    this.x = x;
+    this.y = y;
+    this.r = r;
+    this.n = n;
+    this.color = color(225, 225, 225);
   }
-  let angle = TWO_PI / npoints;
-  beginShape();
-  for (let a = 0; a < TWO_PI; a += angle) {
-    let sx = x + cos(a) * radius;
-    let sy = y + sin(a) * radius;
-    vertex(sx, sy);
+  
+  contains(mx, my){
+    let d = dist(mx, my, this.x, this.y);
+    if (d < this.r) {
+      return true;
+    } else {
+      return false;
+    }
   }
-  endShape(CLOSE);
+  
+  changeColor() {
+    this.color = color(0, 0, 0);
+  }
+  
+  show() {
+    beginShape();
+    for (let a = 0; a < TWO_PI; a += this.angle) {
+      let sx = this.x + cos(a) * this.r;
+      let sy = this.y + sin(a) * this.r;
+      vertex(sx, sy);
+    }
+    endShape(CLOSE);
+    fill(this.color);
+  }
 }
+
