@@ -1,0 +1,23 @@
+{
+  "name": "cb2077",
+  "version": "1.0.0",
+  "description": "Skill trees for Cyberpunk2077",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Populim/cb2077.git"
+  },
+  "author": "Matheus Populim, Bruno Baldissera, Bruno Gazoni e Gabriel Eluan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Populim/cb2077/issues"
+  },
+  "homepage": "https://github.com/Populim/cb2077#readme",
+  "dependencies": {
+    "bootstrap": "^4.5.2",
+    "express": "^4.17.1"
+  }
+}
